@@ -8,3 +8,6 @@ def show(request):
 
 def login(request):
      return render(request, 'Index/login.html')
+
+def signin(request):
+     return render(request, 'Index/signin.html')
