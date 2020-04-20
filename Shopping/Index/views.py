@@ -37,7 +37,7 @@ def my_login(request):
 
 def my_logout(request):
     logout(request)
-    return redirect('login')
+    return redirect('show')
 
 def signup(request):
      return render(request, 'Index/signup.html')

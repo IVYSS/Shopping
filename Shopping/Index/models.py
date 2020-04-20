@@ -42,7 +42,7 @@ class Review(models.Model):
     def __str__(self):
         return '(%s) %s' % (self.create_by, self.text)
 
-class Order_product(object):
+class Order_product(models.Model):
     order_no = models.IntegerField(primary_key = True)
     unit = models.IntegerField()
     unit_price = models.DecimalField(max_digits=8, decimal_places=2)
