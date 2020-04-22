@@ -1,11 +1,14 @@
 from .models import Product,Product_type
 from django.shortcuts import redirect, render
 from django.http import HttpResponse
-from django.contrib.auth import authenticate, logout, login
+from django.contrib.auth import authenticate, login, logout, update_session_auth_hash
 from django.db.models import Q
 from django.core.paginator import Paginator
 from django.shortcuts import render
 from django.contrib.auth.models import User
+from django.core.checks import messages
+from django.contrib.auth.decorators import login_required
+
 # Create your views here.
 
 def show(request):
@@ -60,6 +63,7 @@ def my_login(request):
 
     return render(request, template_name='Index/login.html', context=context)
 
+@login_required
 def my_logout(request):
     logout(request)
     return redirect('show')
@@ -91,3 +95,19 @@ def signup(request):
         else:             
             context['error'] = 'Password Not Match'             
     return render(request, template_name='Index/signup.html', context=context)
+
+def change_password(request):
+    if request.method == 'POST':
+        form = PasswordChangeForm(request.user, request.POST)
+        if form.is_valid():
+            user = form.save()
+            update_session_auth_hash(request, user)  # Important!
+            messages.success(request, 'Your password was successfully updated!')
+            return redirect('change_password')
+        else:
+            messages.error(request, 'Please correct the error below.')
+    else:
+        form = PasswordChangeForm(request.user)
+    return render(request, 'accounts/change_password.html', {
+        'form': form
+    })
