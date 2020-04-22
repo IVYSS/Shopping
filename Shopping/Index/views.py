@@ -5,6 +5,7 @@ from django.contrib.auth import authenticate, logout, login
 from django.db.models import Q
 from django.core.paginator import Paginator
 from django.shortcuts import render
+from django.contrib.auth.models import User
 # Create your views here.
 
 def show(request):
@@ -64,4 +65,29 @@ def my_logout(request):
     return redirect('show')
 
 def signup(request):
-     return render(request, 'Index/signup.html')
+    context = {}       
+    if request.method == 'POST':         
+        fname = request.POST.get('fname')         
+        lname = request.POST.get('lname')         
+        username = request.POST.get('username')         
+        email = request.POST.get('email')         
+        password = request.POST.get('password')         
+        password2 = request.POST.get('cpassword')
+        print('-------------------------')
+        print(fname)
+        print(lname)
+        print(username)
+        print(email) 
+        print(password)         
+        print(password2)       
+        if password == password2:             
+                      
+            user = User.objects.create_user(username,  email, password)
+            user.fist_name = fname
+            user.last_name = lname
+            user.save()
+            print("OK")             
+            return redirect('login')
+        else:             
+            context['error'] = 'Password Not Match!!!'             
+    return render(request, template_name='Index/signup.html', context=context)
