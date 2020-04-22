@@ -15,13 +15,17 @@
             <a class="navbar-brand" href="{% url 'show' %}">
             <img src="/docs/4.0/assets/brand/bootstrap-solid.svg" width="30" height="30" class="d-inline-block align-top" alt="">
             Bootstrap
-            </a>{% if user.is_anonymous%}                               
-            <a type="text" name="signin" href="{% url 'signup' %}">Signup</a>
-            <a type="text" name="login" href="{% url 'login' %}">Login</a>
+            </a>
+            {% if user.is_anonymous%}
+            <div class="float-right">
+            <a type="text" name="login" class="btn btn-primary" href="{% url 'login' %}">Login</a>                     
+            <a type="text" name="signin" class="btn btn-primary" href="{% url 'signup' %}">Signup</a>
+            
              {% endif%}
             {% if user.is_authenticated%}
             <a type="text" name="login" href="{% url 'logout' %}">Logout</a>
             {% endif%}
+        </div>
        </nav>
        
     </div>
