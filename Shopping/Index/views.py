@@ -89,5 +89,5 @@ def signup(request):
             print("OK")             
             return redirect('login')
         else:             
-            context['error'] = 'Password Not Match!!!'             
+            context['error'] = 'Password Not Match'             
     return render(request, template_name='Index/signup.html', context=context)
