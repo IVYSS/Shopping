@@ -4,6 +4,7 @@ from Profile.models import My_User,Order
 
 class Product_type (models.Model):
     name = models.CharField(max_length=255)
+    slug = models.SlugField()
     desc = models.TextField(null=True, blank=True)
     
     def __str__(self):
@@ -15,22 +16,26 @@ class Product (models.Model):
     desc = models.TextField(null=True, blank=True)
     stock = models.IntegerField()
     price = models.DecimalField(max_digits=8, decimal_places=2)
+    picture_url = models.ImageField()
     product_type_id = models.ForeignKey(Product_type, on_delete=models.CASCADE)
     sale_user_id = models.ForeignKey(My_User, on_delete=models.CASCADE)
 
     def __str__(self):
-        product_type_id = ",".join(str(seg)for seg in self.product_type_id.all())
-        return '%s (%s) %s฿ (%s)' % (self.name, product_type_id,self.price,self.stock)
+        return '%s (%s) %s฿ %sชิ้น' % (self.name, self.product_type_id,self.price,self.stock)
 
     def product_type(self):
-        return ",".join(str(seg)for seg in self.product_type_id.all())
+        return ",".join(str(seg)for seg in self.product_type_id)
 
-class Product_picture(models.Model):
-    product_id = models.ForeignKey(Product, on_delete=models.CASCADE)
-    picture_url = models.ImageField(blank=True, null=True)
+    def get_cat_list(self):
+        k = self.product_type_id # for now ignore this instance method
+        breadcrumb = ["dummy"]
+        while k is not None:
+            breadcrumb.append(k.slug)
+            k = k.parent
+        for i in range(len(breadcrumb)-1):
+            breadcrumb[i] = '/'.join(breadcrumb[-1:i-1:-1])
+        return breadcrumb[-1:0:-1]
 
-    def __str__(self):
-        return '%s %s' % (self.id,self.product_id.name)
     
 
 class Review(models.Model):

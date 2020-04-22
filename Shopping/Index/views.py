@@ -1,12 +1,36 @@
-
+from .models import Product,Product_type
 from django.shortcuts import redirect, render
 from django.http import HttpResponse
 from django.contrib.auth import authenticate, logout, login
+from django.db.models import Q
+from django.core.paginator import Paginator
+from django.shortcuts import render
 # Create your views here.
 
 def show(request):
-     return render(request, 'Index/index.html')
+    search = request.GET.get('search', '')
+    mytype = request.GET.get('mytype', '')
+    print(mytype)
+    print(search)
+    product_type= Product_type.objects.all()
+    product = Product.objects.filter(Q(is_hide=False)&(Q(name__icontains=search)))
+    paginator = Paginator(product, 1)
+    page = request.GET.get('page')
+   
+    product = paginator.get_page(page)
+    return render(request, 'Index/home.html', context=
+    {
+        'product':product,
+        'product_type':product_type
+    })
+def detail(request, product_id):
+    product = Product.objects.get(id=product_id)
+    context = {
+        'product' : product
+    }
 
+    return render(request, 'Index/detail.html', context=context)
+    
 def my_login(request):
     context = {}
 
