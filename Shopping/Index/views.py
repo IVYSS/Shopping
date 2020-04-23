@@ -15,7 +15,7 @@ from django.utils import timezone
 from django.contrib import messages
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.forms import PasswordChangeForm
-
+from .form import ModelProduct
 
 # Create your views here.
 
@@ -179,7 +179,7 @@ def signup(request):
             user.fist_name = fname
             user.last_name = lname
             user.save()
-            print("OK")             
+            print("OK")
             return redirect('login')
         else:             
             context['error'] = 'Password Not Match'             
@@ -200,3 +200,25 @@ def change_password(request):
     return render(request, 'accounts/change_password.html', {
         'form': form
     })
+
+
+# Model Form
+def make_product(request):
+
+    product_type = Product_type.objects.all()
+    if request.method == 'POST':
+        form = ModelProduct(request.POST, request.FILES)
+        if form.is_valid():
+            product = form.save(commit=False)
+            type_id = request.POST.get('type')
+            product.product_type_id = Product_type.objects.get(pk=type_id)
+            product.sale_user_id = request.user
+            form.save()
+    else:
+        form = ModelProduct()
+    context = {
+        'form' : form,
+        'type' : product_type
+    }
+
+    return render(request, 'Index/make-product.html', context=context)
