@@ -6,6 +6,7 @@ from .views import (
     remove_single_product_from_cart
 )
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
+from django.conf.urls import include
 urlpatterns = [
     path('', views.show, name='show'),
     path('login/', views.my_login, name='login'),
