@@ -8,6 +8,9 @@ from django.shortcuts import render
 from django.contrib.auth.models import User
 from django.core.checks import messages
 from django.contrib.auth.decorators import login_required
+from django.shortcuts import render,get_object_or_404
+from django.utils import timezone
+
 
 # Create your views here.
 
@@ -27,6 +30,24 @@ def show(request):
         'product':product,
         'product_type':product_type
     })
+
+def add_to_cart(request,product_id):
+    product = get_object_or_404(Product, id=product_id)
+    order_product = Order_product.objects.create(product_id = product)
+    order_qs = Order.objects.filter(user=request.user, ordered=False)
+    if order_qs.exists():
+        order = order_qs[0]
+        # check if the order item is in the order
+        if order.prodoucts.filter(product_id__id=product.id).exists():
+            order_product.quantity += 1
+            order_product.save()    
+    else:
+        date = timezone.now()
+        order = Order.objects.create(user=request.user, date=date)
+        order.prodoucts.add(order_product)
+    return redirect("product_detail", product_id=product_id)
+
+
 def detail(request, product_id):
     product = Product.objects.get(id=product_id)
     context = {
