@@ -24,10 +24,10 @@ INSTALLED_APPS = [
     'Profile',
     'Index',
     
-
-    'django.contrib.sites',
     
+    'django.contrib.sites',
     'allauth',
+    
     'allauth.account',
     'allauth.socialaccount',
     'allauth.socialaccount.providers.google',
