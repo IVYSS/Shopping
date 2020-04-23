@@ -1,5 +1,7 @@
 <!DOCTYPE html>
+{% load cart_template_tags %}
 {% load static %}
+
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -56,37 +58,41 @@
             <a type="text" name="login" class="btn btn-primary" href="{% url 'login' %}">Login</a>                     
             <a type="text" name="signin" class="btn btn-primary" href="{% url 'signup' %}">Signup</a>
             
+            
              {% endif%}
+
             {% if user.is_authenticated%}
-             
-            <a href="" class="nav-link waves-effect">
-              <span class="badge red z-depth-1 mr-1"> 1 </span>
+             <div class="float-right">
+            <a href="{% url 'order-summary'%}" class="nav-link waves-effect" >
+              <span class="badge red z-depth-1 mr-1"> {{ request.user|cart_product_count }} </span>
               <i class="fas fa-shopping-cart"></i>
               <span class="clearfix d-none d-sm-inline-block"> Cart </span>
             </a>
          
-            <a type="text" name="login" href="{% url 'logout' %}">Logout</a>
+            <a type="text" name="login" href="{% url 'logout' %}" class="nav-link waves-effect">Logout</a>
             {% endif%}
         </div>
        </nav>
        
     </div>
     <div>
+     <div>
+    {% if messages %}
+        {% for message in messages %}
+        <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+          {{ message }}
+          <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        {% endfor %}
+    {% endif %}
+    </div>
     {% block content %}
     {% endblock content %}
 </div>
-<br><br><br>
-<!-- Footer -->
-<footer class="page-footer font-small blue">
 
-  <!-- Copyright -->
-  <div class="footer-copyright text-center py-3">© 2020 Copyright:
-    <a href="https://mdbootstrap.com/"> MDBootstrap.com</a>
-  </div>
-  <!-- Copyright -->
 
-</footer>
-<!-- Footer -->
 <script type="text/javascript" src="{% static 'js/jquery-3.4.1.min.js' %}"></script>
 <!-- Bootstrap tooltips -->
 <script type="text/javascript" src="{% static 'js/popper.min.js' %}"></script>

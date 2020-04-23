@@ -1,11 +1,11 @@
 {% extends "base.html" %}
-{% load static %}
+
 {% block content %}
 
 
 <body>
   <!--Main layout-->
-  <main class="mt-5 pt-4">
+  <main class="mt-2 pt-4">
     <div class="container dark-grey-text mt-5">
 
       <!--Grid row-->
@@ -52,6 +52,9 @@
               <!-- Default input -->
               
               <a href = "{{ product.get_add_to_cart_url }}"class="btn btn-primary btn-md my-0 p">Add to cart
+                <i class="fas fa-shopping-cart ml-1"></i>
+              </a>
+              <a href = "{{ product.get_remove_from_cart_url }}"class="btn btn-danger btn-md my-0 p">Remove from cart
                 <i class="fas fa-shopping-cart ml-1"></i>
               </a>
 

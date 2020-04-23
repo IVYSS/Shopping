@@ -97,13 +97,17 @@
                 <h5>
                   <strong>
                     <a href="{{product.get_absolute_url}}" class="dark-grey-text">{{product.name}}
-                      <span class="badge badge-pill danger-color">NEW</span>
+                      
                     </a>
                   </strong>
                 </h5>
 
                 <h4 class="font-weight-bold blue-text">
-                  <strong>{{product.price}}฿</strong>
+                  <strong>{% if product.discount_price %}
+                  {{ product.discount_price }}฿
+                  {% else %}
+                  {{ product.price }}฿
+                  {% endif %}</strong>
                 </h4>
 
               </div>

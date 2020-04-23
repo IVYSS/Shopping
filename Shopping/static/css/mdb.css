@@ -1695,7 +1695,6 @@ a.text-light:hover, a.text-light:focus {
  * https://github.com/fians/Waves/blob/master/LICENSE */
 .waves-effect {
   position: relative;
-  overflow: hidden;
   cursor: pointer;
   -webkit-user-select: none;
   -moz-user-select: none;

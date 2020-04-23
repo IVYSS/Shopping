@@ -14,7 +14,7 @@ class Product_type (models.Model):
 class Product (models.Model):
     is_hide = models.BooleanField(default=False)
     name = models.CharField(max_length=255)
-    slug = models.SlugField(allow_unicode=True)
+
     desc = models.TextField(null=True, blank=True)
     stock = models.IntegerField()
     discount_price = models.DecimalField(max_digits=8, decimal_places=2,null=True, blank=True)
@@ -24,7 +24,7 @@ class Product (models.Model):
     sale_user_id = models.ForeignKey(User, on_delete=models.CASCADE)
 
     def __str__(self):
-        return '%s (%s) %s฿ %sชิ้น' % (self.name, self.product_type_id,self.price,self.stock)
+        return '%s (%s) %sชิ้น' % (self.name, self.product_type_id,self.stock)
 
     def product_type(self):
         return ",".join(str(seg)for seg in self.product_type_id)
@@ -38,6 +38,12 @@ class Product (models.Model):
         return reverse("add-to-cart", kwargs={
             'product_id': self.id  
         })
+    
+    def get_remove_from_cart_url(self):
+        return reverse("remove-from-cart", kwargs={
+            'product_id': self.id  
+        })
+
 
     def get_cat_list(self):
         k = self.product_type_id # for now ignore this instance method
@@ -60,11 +66,26 @@ class Review(models.Model):
     def __str__(self):
         return '(%s) %s' % (self.create_by, self.text)
 
-class Order_product(models.Model):
-    order_no = models.IntegerField(primary_key = True)
+
+class Order_products(models.Model):
+   
     quantity = models.IntegerField(default=1)
     product_id = models.ForeignKey(Product, on_delete=models.CASCADE)
     ordered = models.BooleanField(default=False)
     user= models.ForeignKey(User, on_delete=models.CASCADE,null=True, blank=True)
     def __str__(self):
         return '%s  %sชิ้น' % (self.product_id.name, self.quantity)
+
+    def get_total_product_price(self):
+        return self.quantity * self.product_id.price
+
+    def get_total_discount_product_price(self):
+        return self.quantity * self.product_id.discount_price
+
+    def get_amount_saved(self):
+        return self.get_total_product_price () - self.get_total_discount_product_price()
+        
+    def get_final_price(self):
+        if self.product_id.discount_price:
+            return self.get_total_discount_product_price()
+        return self.get_total_product_price()

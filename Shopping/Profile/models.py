@@ -1,6 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
-from Index.models import Order_product
+from Index.models import Order_products
 
 
 # Create your models here.
@@ -47,7 +47,7 @@ class Order(models.Model):
     date =  models.DateField(auto_now=False, auto_now_add=True)
     delivery_place = models.TextField(null=True, blank=True)
     ordered = models.BooleanField(default=False)
-    prodoucts = models.ManyToManyField(Order_product)
+    products = models.ManyToManyField(Order_products)
     Status = (
         ('NS','Notyetshipped'),
         ('S','Shipping'),
@@ -57,4 +57,10 @@ class Order(models.Model):
     user= models.ForeignKey(User, on_delete=models.CASCADE,null=True, blank=True)
     def __str__(self):
         return self.user.username
+
+    def get_total(self):
+        total = 0
+        for order_products in self.products.all():
+            total += order_products.get_final_price()
+        return total
  
