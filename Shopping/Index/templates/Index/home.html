@@ -96,7 +96,7 @@
                 </a>
                 <h5>
                   <strong>
-                    <a href="{% url 'product_detail' product_id=product.id %}" class="dark-grey-text">{{product.name}}
+                    <a href="{{product.get_absolute_url}}" class="dark-grey-text">{{product.name}}
                       <span class="badge badge-pill danger-color">NEW</span>
                     </a>
                   </strong>

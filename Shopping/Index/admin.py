@@ -1,8 +1,8 @@
 from django.contrib import admin
 from django.contrib.auth.models import Permission
 from django.utils.safestring import mark_safe
-from Index.models import Product,Product_type,Review,Order_product,Order
-from Profile.models import My_User,Financial_detail,Payment,Promotion
+from Index.models import Product,Product_type,Review,Order_product
+from Profile.models import My_User,Financial_detail,Payment,Promotion,Order
 # Register your models here.
 
 admin.site.register(Product)

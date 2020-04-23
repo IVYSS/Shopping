@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from Index.models import Order_product
 
 
 # Create your models here.
@@ -24,7 +25,7 @@ class Financial_detail(models.Model):
         ('expense','expense'),
     )
     financial_type = models.CharField(max_length=8, choices=Financial_type)
-    financial_user_id = models.ForeignKey(My_User, on_delete=models.CASCADE)
+    financial_user_id = models.ForeignKey(User, on_delete=models.CASCADE)
 
 class Payment(models.Model):
     date = models.DateField(auto_now=False, auto_now_add=False)
@@ -35,27 +36,25 @@ class Payment(models.Model):
         ('truewallet','truewallet')
     )
     method = models.CharField(max_length=10, choices=Method)
-    financial_user_id = models.ForeignKey(My_User, on_delete=models.CASCADE)
+    financial_user_id = models.ForeignKey(User, on_delete=models.CASCADE)
 
 class Promotion(models.Model):
     name = models.CharField(max_length=255)
-    Status = (
-        ('A','available'),
-        ('U','unavailable')
-    )
-    status = models.CharField(max_length=1, choices=Status)
+    available = models.BooleanField(default=True)
     discount = models.IntegerField()
     
 class Order(models.Model):
     date =  models.DateField(auto_now=False, auto_now_add=True)
     delivery_place = models.TextField(null=True, blank=True)
-    total_price = models.DecimalField(max_digits=8, decimal_places=2)
+    ordered = models.BooleanField(default=False)
+    prodoucts = models.ManyToManyField(Order_product)
     Status = (
         ('NS','Notyetshipped'),
         ('S','Shipping'),
         ('D','Delivered'),
     )
     status = models.CharField(max_length=2, choices=Status)
-    customer_user_id = models.ForeignKey(My_User, on_delete=models.CASCADE)
-    promotion_id = models.ForeignKey(Promotion, on_delete=models.CASCADE)
+    user= models.ForeignKey(User, on_delete=models.CASCADE,null=True, blank=True)
+    def __str__(self):
+        return self.user.username
  

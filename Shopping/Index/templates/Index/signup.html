@@ -1,98 +1,72 @@
-
+{% extends "base.html" %}
 <!DOCTYPE html>
 {% load static %}
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap.css'%}">
-    <title>HomePage</title>
-</head>
-<body>
-    <div class="nav-bat">
-        <!-- Image and text -->
-        <nav class="navbar navbar-light bg-light">
-            <a class="navbar-brand" href="{% url 'show' %}">
-            <img src="/docs/4.0/assets/brand/bootstrap-solid.svg" width="30" height="30" class="d-inline-block align-top" alt="">
-            Bootstrap
-            </a>                               
-            <a type="text" name="login" href="{% url 'login' %}">Login</a>
-       </nav>
-       
-    </div>
-    <div>
-</div>
-<img src="https://cdn.searchenginejournal.com/wp-content/uploads/2019/10/a6375506-fcd4-4856-a9c4-083765b11600-5db7a15aa2285-760x400.jpeg" class="img-fluid w-100" alt="Responsive image" id="topimg">
+{% block content %}
 
-    <div class="container-fluid">
-        <div class="row pl-5">
-            <div class="col-6">
-                <br><br><br>
-                <div class="form-group">
-                    <label for="usr">Username:</label>
-                    <input type="text" class="form-control" id="usr">
-                  </div>
-                  <div class="form-group">
-                    <label for="pwd">Password:</label>
-                    <input type="password" class="form-control" id="pwd">
-                  </div>
-                  <div class="form-group">
-                    <label for="pwd">Re-Password:</label>
-                    <input type="password" class="form-control" id="pwd">
-                  </div>
-                  <div class="form-group">
-                    <label for="pwd">Firstname:</label>
-                    <input type="text" class="form-control" id="pwd">
-                  </div>
-                  <div class="form-group">
-                    <label for="pwd">Lastname:</label>
-                    <input type="text" class="form-control" id="pwd">
-                  </div>
-                  <div class="form-group">
-                    <label for="pwd">Email:</label>
-                    <input type="email" class="form-control" id="pwd">
-                  </div>
-            </div>
-        
-        <div class="col-6 pr-5">
-            <br><br><br>
+<img
+  src="https://cdn.searchenginejournal.com/wp-content/uploads/2019/10/a6375506-fcd4-4856-a9c4-083765b11600-5db7a15aa2285-760x400.jpeg"
+  class="img-fluid w-100" alt="Responsive image" id="topimg">
+<br><br><br>
+<form method="POST" action="{% url 'signup' %}">
+  {% csrf_token %}
+  <div class="container" style="align-items: center;">
+    <div class="row">
+      <div class="col-2"></div>
+      <div class="col-8">
+        <div class="card w-100">
+          <div class="card-header">
+            SignUp
+          </div>
+          <div class="card-body">
+            <h5 class="card-title"></h5>
+            <label for="usr" class="">Username:</label>
+            <input type="text" class="form-control" id="usr" name="username">
+
+            <label for="">Password:</label>
+            <input type="password" class="form-control" name="password" id="" placeholder="">
+
+            <label for="">Re-Password:</label>
+            <input type="password" class="form-control" name="cpassword" id="" placeholder="">
+
+            <label for="fname" class="">Firstname:</label>
+            <input type="text" class="form-control" id="fname" name="fname">
+
+            <label for="usr" class="">Lastname:</label>
+            <input type="text" class="form-control" id="lname" name="lname">
+
+            <label for="usr" class="">Age:</label>
+            <input type="number" class="form-control" id="lname" name="lname">
+
             <div class="form-group">
-                <label for="usr">Username:</label>
-                <input type="text" class="form-control" id="usr">
-              </div>
-              <div class="form-group">
-                <label for="pwd">Password:</label>
-                <input type="password" class="form-control" id="pwd">
-              </div>
-              <div class="form-group">
-                <label for="pwd">Re-Password:</label>
-                <input type="password" class="form-control" id="pwd">
-              </div>
-              <div class="form-group">
-                <label for="pwd">Firstname:</label>
-                <input type="text" class="form-control" id="pwd">
-              </div>
-              <div class="form-group">
-                <label for="pwd">Lastname:</label>
-                <input type="text" class="form-control" id="pwd">
-              </div>
-              <div class="form-group">
-                <label for="pwd">Email:</label>
-                <input type="email" class="form-control" id="pwd">
-              </div>
+              <label for="email">Email:</label>
+              <input type="email" class="form-control" name="email" id="email" aria-describedby="emailHelpId"
+                placeholder="">
+              <small id="emailHelpId" class="form-text text-muted"></small>
+            </div>
+
+            
+
+            <button class="btn btn-primary" type="submit">Sing Up</button>
+            {% if error %}
+            <p class="text-danger">{{ error }}</p>
+            {% endif %}
+          </div>
         </div>
+
+      </div>
+      <div class="col-2"></div>
     </div>
-    </div></div>
-</body>
+  </div>
+</form>
 <style>
-    #topimg {
-   width:100%;
-   height:20em;
-   overflow:hidden;
-}
+  #topimg {
+    width: 100%;
+    height: 20em;
+    overflow: hidden;
+  }
+
   .form-control {
-    box-shadow: 10px 10px 42px 0px rgba(194,194,194,0.29);
+    box-shadow: 10px 10px 42px 0px rgba(194, 194, 194, 0.29);
   }
 </style>
-</html>
+{% endblock content %}
