@@ -1,5 +1,8 @@
 from .models import Product,Product_type,Order_products,Address
 from Profile.models import Order
+from .models import Product,Product_type,Order_products
+
+from Profile.models import Order,My_User #######################
 from django.shortcuts import redirect, render
 from django.http import HttpResponse
 from django.contrib.auth import authenticate, login, logout, update_session_auth_hash
@@ -15,6 +18,8 @@ from django.contrib import messages
 from django.core.exceptions import ObjectDoesNotExist
 from Index.forms import CheckoutFrom
 
+from django.contrib.auth.forms import PasswordChangeForm
+from .form import ModelProduct
 
 # Create your views here.
 
@@ -23,7 +28,7 @@ def show(request):
     mytype = request.GET.get('mytype', '')
     print(mytype)
     print(search)
-    product_type= Product_type.objects.all()
+    product_type = Product_type.objects.all()
     product = Product.objects.filter(Q(is_hide=False)&(Q(name__icontains=search)))
     paginator = Paginator(product, 20)
     page = request.GET.get('page')
@@ -184,20 +189,17 @@ def signup(request):
         email = request.POST.get('email')         
         password = request.POST.get('password')         
         password2 = request.POST.get('cpassword')
-        print('-------------------------')
-        print(fname)
-        print(lname)
-        print(username)
-        print(email) 
-        print(password)         
-        print(password2)       
-        if password == password2:             
-                      
+        age = request.POST.get('age')
+        gender = request.POST.get('gender')
+        dob = request.POST.get('dob')
+
+        if password == password2:        
             user = User.objects.create_user(username,  email, password)
+            my_user = My_User.objects.create(age=age, dob=dob, gender=gender, user=user)
             user.fist_name = fname
             user.last_name = lname
             user.save()
-            print("OK")             
+            print("OK")
             return redirect('login')
         else:             
             context['error'] = 'Password Not Match'             
@@ -218,3 +220,25 @@ def change_password(request):
     return render(request, 'accounts/change_password.html', {
         'form': form
     })
+
+
+# Model Form
+def make_product(request):
+
+    product_type = Product_type.objects.all()
+    if request.method == 'POST':
+        form = ModelProduct(request.POST, request.FILES)
+        if form.is_valid():
+            product = form.save(commit=False)
+            type_id = request.POST.get('type')
+            product.product_type_id = Product_type.objects.get(pk=type_id)
+            product.sale_user_id = request.user
+            form.save()
+    else:
+        form = ModelProduct()
+    context = {
+        'form' : form,
+        'type' : product_type
+    }
+
+    return render(request, 'Index/make-product.html', context=context)

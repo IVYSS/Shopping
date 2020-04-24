@@ -10,8 +10,10 @@ class My_User(models.Model):
     age = models.IntegerField()
     Gender = (
         ('M','Male'),
-        ('F','Female')
+        ('F','Female'),
+        ('O','Other'),
     )
+    
     gender = models.CharField(max_length=1, choices=Gender)
     def __str__(self):
         return '%s %s (%s)' % (self.user.first_name, self.user.last_name, self.gender)
