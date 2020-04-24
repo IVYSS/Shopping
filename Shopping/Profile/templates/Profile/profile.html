@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 {% block content %}
 <br><br><br><br>
+
 <div class="container-fluid">
     <div class="row">
         <div class="col-4">
@@ -26,37 +27,35 @@
                 </div>
                 <div class="row">
                     <div class="col-4">
-                        <h5>{{ information.first_name }}</h5>
+                        <h5>{{ information.user.first_name }}</h5>
                     </div>
                     <div class="col-4">
-                        <h5>{{ information.last_name }}</h5>
+                        <h5>{{ information.user.last_name }}</h5>
                     </div>
                     <div class="col-4">
-                        <h5>{{ information.Age }}</h5>
+                        <h5>{{ information.age }}</h5>
                     </div>
                 </div>
                 <hr><br><br>
 
                 <div class="row">
                     <div class="col-4">
-                        <h4>First-name :</h4>
+                        <h4>Email :</h4>
+                    </div>
+                    
+                    <div class="col-4">
                     </div>
                     <div class="col-4">
-                        <h4>Last-name :</h4>
-                    </div>
-                    <div class="col-4">
-                        <h4>Age :</h4>
+                        <h4>Birthday :</h4>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-4">
-                        <h5>{{ information.first_name }}</h5>
+                        <h5>{{ information.user.email }}</h5>
                     </div>
+                     <div class="col-4"></div>
                     <div class="col-4">
-                        <h5>{{ information.last_name }}</h5>
-                    </div>
-                    <div class="col-4">
-                        <h5>{{ information.Age }}</h5>
+                        <h5>{{ information.dob }}</h5>
                     </div>
                 </div>
                 <hr>
