@@ -63,6 +63,7 @@
 
       </nav>
       <!--/.Navbar-->
+      <p>Item : {{ count_product }}</p>
 
       <!--Section: Products v.3-->
       <section class="text-center mb-4">
@@ -157,6 +158,27 @@
     </div>
   </main>
   <!--Main layout-->
+  <input type="text" value="" class="" id="comment" name="comment"></input>
+      <button onclick="Comment()">Submit</button>
+    <div id="comment_text">
+
+    </div>
+    <script>
+      function Comment() {
+        axios.post('api/comment/', {
+          comment: document.getElementById('comment').value
+        })
+        
+          .then(function (response) {
+            console.log(response.data.input)
+            let t = response.data.input;
+            let tbody = document.getElementById("comment_text");
+            let text = document.createElement("p");
+            text.innerHTML =  `${t}`;
+            tbody.appendChild(text);
+          })
+      }
+    </script>
 {% endblock content %}
     </footer>
   <!--/.Footer-->
@@ -176,6 +198,7 @@
     new WOW().init();
 
   </script>
+  
 </body>
 
 </html>

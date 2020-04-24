@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<main class="mt-2 pt-4">
+    <div class="container">
+
+    <h2>OrderSummary</h2>
+    <table class="table table-hover">
+        <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Producr Name</th>
+            <th scope="col">Price</th>
+            <th scope="col">Quantity</th>
+            <th scope="col">Total Product Price</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for order_products in order.products.all %}
+         <tr>
+          <th scope="row">{{ forloop.counter }}</th>
+          <td>{{order_products.product_id.name}}</td>
+          <td>{{order_products.product_id.price}}</td>
+          <td>
+          <a href="{% url 'remove-single-productfrom-cart' order_products.product_id.id %}"><i class="fas fa-minus mr-2"></i></a>
+          {{order_products.quantity}}
+          <a href="{% url 'add-to-cart' order_products.product_id.id %}"><i class="fas fa-plus ml-2"></i></a>
+          </td>
+          <td>{% if order_products.product_id.discount_price %}
+                {{ order_products.get_total_discount_product_price }}฿
+                <span class="badge badge-primary">Saving {{ order_products.get_amount_saved }}฿</span>
+            {% else %}
+                {{ order_products.get_total_product_price }}฿
+            {% endif %}
+             <a style='color: red;' href="{% url 'remove-from-cart' order_products.product_id.id %}">
+                <i class="fas fa-trash float-right"></i>
+            </a>
+            </td>
+        </tr>
+         {% empty %}
+        
+            <td colspan='5'>Your cart is empty</td>
+        
+        <tr>
+            <td colspan="5">
+            <a class='btn btn-info float-right' href='/'>Continue shopping</a>
+            </td>
+        </tr>
+         {% endfor %}
+        {% if order.get_total %}
+         <tr>
+            <td colspan="4" ><strong>Order Total</strong></td>
+            <td><b>{{ order.get_total }}฿</b></td>
+        </tr>
+        
+         </tbody>
+            </table>
+
+             <tr>
+            <td colspan="5">
+            <a class='btn btn-success float-right ml-2' href='/checkout/'>Proceed to checkout</a>
+            <a class='btn btn-info float-right' href='/'>Continue shopping</a>
+            </td>
+        </tr>
+         {% endif %}
+    </div>
+</main>
+
+{% endblock %}

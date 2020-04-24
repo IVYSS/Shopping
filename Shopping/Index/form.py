@@ -8,8 +8,6 @@ class ModelProduct(ModelForm):
         model = Product
         fields = ['name','desc','stock','price','picture_url']
 
-
-
         labels = {
             'name': 'Name :',
             'desc' : 'Descriptions',

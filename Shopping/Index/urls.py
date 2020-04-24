@@ -20,7 +20,8 @@ urlpatterns = [
     path('checkout/',views.Checkout, name='checkout'),    
     path('order-summary',views.OrderSummary, name='order-summary'),
     path('make-product/',views.make_product, name='make_product'),
-    path('type/<int:id>/', views.show_type, name='show_type')
+    path('type/<int:id>/', views.show_type, name='show_type'),
+    path('api/comment/',views.comment, name='comment')
 ]
 
 urlpatterns += staticfiles_urlpatterns()
