@@ -10,8 +10,7 @@ class My_User(models.Model):
     age = models.IntegerField()
     Gender = (
         ('M','Male'),
-        ('F','Female'),
-        ('O','Other'),
+        ('F','Female')
     )
     
     gender = models.CharField(max_length=1, choices=Gender)
