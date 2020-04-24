@@ -26,9 +26,8 @@ def show(request):
     print(search)
     product_type = Product_type.objects.all()
     product = Product.objects.filter(Q(is_hide=False)&(Q(name__icontains=search)))
-    paginator = Paginator(product, 1)
+    paginator = Paginator(product, 8)
     page = request.GET.get('page')
-   
     product = paginator.get_page(page)
     return render(request, 'Index/home.html', context=
     {
@@ -214,6 +213,7 @@ def make_product(request):
             product.product_type_id = Product_type.objects.get(pk=type_id)
             product.sale_user_id = request.user
             form.save()
+            return redirect('show') 
     else:
         form = ModelProduct()
     context = {
@@ -222,3 +222,11 @@ def make_product(request):
     }
 
     return render(request, 'Index/make-product.html', context=context)
+
+def show_type(request, id):
+    id_product = Product_type.objects.get(pk=id) #รับจากที่ กด ใน type-page.html
+    t_product = Product.objects.filter(product_type_id = id_product) #เลือกเฉพาะ หมวด ใน ตาราง Product
+    context = {
+        't_product' : t_product
+    }
+    return render(request, 'Index/type-page.html', context)

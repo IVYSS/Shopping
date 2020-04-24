@@ -43,7 +43,7 @@
              <form class="form-inline" method="GET" action="{% url 'show' %}">
           {% for pt in product_type%}
             <li class="nav-item active">
-              <a class="nav-link" href="/category/{{pt.name}}">{{pt.name}}
+              <a class="nav-link" href="{% url 'show_type' id=pt.id %}">{{pt.name}}
                 <span class="sr-only">(current)</span>
               </a>
             </li>
@@ -70,10 +70,10 @@
       
 
         <!--Grid row-->
-        <div class="row wow fadeIn">
+        <div class="row col-12 wow fadeIn">
         {% for product in product.object_list %}
           <!--Grid column-->
-          <div class="col-lg-3 col-md-6 mb-4">
+          <div class="col-3 mb-4">
 
             <!--Card-->
             <div class="card">
@@ -81,7 +81,7 @@
               <!--Card image-->
               <div class="view overlay">
                 <img src="{{ product.picture_url.url}}" class="card-img-top"
-                  alt="">
+                  alt="" style="max-width: 100%;">
                 <a>
                   <div class="mask rgba-white-slight"></div>
                 </a>

@@ -18,6 +18,7 @@ urlpatterns = [
     path('remove-single-product-from-cart/<product_id>/',remove_single_product_from_cart, name='remove-single-productfrom-cart'),
     path('order-summary',views.OrderSummary, name='order-summary'),
     path('make-product/',views.make_product, name='make_product'),
+    path('type/<int:id>/', views.show_type, name='show_type')
 ]
 
 urlpatterns += staticfiles_urlpatterns()

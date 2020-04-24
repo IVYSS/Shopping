@@ -6,6 +6,10 @@ from Profile.models import My_User
 
 def showprofile(request):
      user = request.user.id
+     test = request.user
+     testtwo = My_User.objects.all()
+     print(testtwo)
+     print(test)
      information = My_User.objects.get(pk=user)
      
      
