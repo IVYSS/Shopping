@@ -1,4 +1,4 @@
-from .models import Product,Product_type,Order_products
+from .models import Product,Product_type,Order_products,Address
 from Profile.models import Order
 from django.shortcuts import redirect, render
 from django.http import HttpResponse
@@ -13,6 +13,7 @@ from django.shortcuts import render,get_object_or_404
 from django.utils import timezone
 from django.contrib import messages
 from django.core.exceptions import ObjectDoesNotExist
+from Index.forms import CheckoutFrom
 
 
 # Create your views here.
@@ -24,7 +25,7 @@ def show(request):
     print(search)
     product_type= Product_type.objects.all()
     product = Product.objects.filter(Q(is_hide=False)&(Q(name__icontains=search)))
-    paginator = Paginator(product, 1)
+    paginator = Paginator(product, 20)
     page = request.GET.get('page')
    
     product = paginator.get_page(page)
@@ -33,6 +34,22 @@ def show(request):
         'product':product,
         'product_type':product_type
     })
+
+def Checkout(request):
+    if request.method == 'POST':
+        my_from = CheckoutFrom(self.request.POST or None)
+        if form.is_valid():
+            print("The form is valid")
+            return redirect("checkout")
+
+    else:
+        my_from = CheckoutFrom()
+        context = {
+            'my_from':my_from
+        }
+    return render(request, 'Index/checkout.html', context)
+    
+    
 
 @login_required
 def OrderSummary(request):

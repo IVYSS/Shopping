@@ -16,7 +16,8 @@ urlpatterns = [
     path('add-to-cart/<product_id>/',add_to_cart, name='add-to-cart'),
     path('remove-from-cart/<product_id>/',remove_from_cart, name='remove-from-cart'),
     path('remove-single-product-from-cart/<product_id>/',remove_single_product_from_cart, name='remove-single-productfrom-cart'),
-    path('order-summary',views.OrderSummary, name='order-summary'),    
+    path('order-summary/',views.OrderSummary, name='order-summary'),    
+    path('checkout/',views.Checkout, name='checkout'),    
 ]
 
 urlpatterns += staticfiles_urlpatterns()

@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.shortcuts import reverse
+from django_countries.fields import CountryField
 
 
 class Product_type (models.Model):
@@ -89,3 +90,17 @@ class Order_products(models.Model):
         if self.product_id.discount_price:
             return self.get_total_discount_product_price()
         return self.get_total_product_price()
+
+class Address(models.Model):
+    user = models.ForeignKey(User,
+                             on_delete=models.CASCADE)
+    street_address = models.CharField(max_length=100)
+    apartment_address = models.CharField(max_length=100)
+    country = CountryField(multiple=False)
+    zip = models.CharField(max_length=100)
+    default = models.BooleanField(default=False)
+    Option = (
+    ('S', 'Stripe'),
+    ('P', 'PayPal')
+    )
+    payment_option = models.CharField(max_length=1, choices=Option)
