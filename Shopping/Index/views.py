@@ -51,13 +51,14 @@ def Checkout(request):
                 payment_option = my_form.cleaned_data.get('payment_option')
                 adddress = Address (
                     user = request.user,
-                    street_address = street_address
-                    apartment_address = apartment_address
-                    country = country
-                    zip = zip
-                    default = default
+                    street_address = street_address,
+                    apartment_address = apartment_address,
+                    country = country,
+                    zip = zip,
+                    default = default,
                     payment_option = payment_option
-                )adddress.save()
+                )
+                adddress.save()
                 order.delivery_place = adddress
                 order()
                 return redirect("checkout")
