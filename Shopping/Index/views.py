@@ -29,7 +29,7 @@ def show(request):
     print(search)
     product_type= Product_type.objects.all()
     product = Product.objects.filter(Q(is_hide=False)&(Q(name__icontains=search)))
-    paginator = Paginator(product, 20)
+    paginator = Paginator(product, 2)
     page = request.GET.get('page')
    
     product = paginator.get_page(page)
@@ -53,13 +53,14 @@ def Checkout(request):
                 payment_option = my_form.cleaned_data.get('payment_option')
                 adddress = Address (
                     user = request.user,
-                    street_address = street_address
-                    apartment_address = apartment_address
-                    country = country
-                    zip = zip
-                    default = default
-                    payment_option = payment_option
-                )adddress.save()
+                    street_address = street_address,
+                    apartment_address = apartment_address,
+                    country = country,
+                    zip = zip,
+                    default = default,
+                    payment_option = payment_option,
+                )
+                adddress.save()
                 order.delivery_place = adddress
                 order()
                 return redirect("checkout")
