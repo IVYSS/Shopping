@@ -1,6 +1,7 @@
+from .models import Product,Product_type,Order_products,Address
+from Profile.models import Order
 from .models import Product,Product_type,Order_products
-
-from Profile.models import Order,My_User #######################
+from Profile.models import Order
 from django.shortcuts import redirect, render
 from django.http import HttpResponse
 from django.contrib.auth import authenticate, login, logout, update_session_auth_hash
@@ -14,6 +15,8 @@ from django.shortcuts import render,get_object_or_404
 from django.utils import timezone
 from django.contrib import messages
 from django.core.exceptions import ObjectDoesNotExist
+from Index.forms import CheckoutFrom
+
 from django.contrib.auth.forms import PasswordChangeForm
 from .form import ModelProduct
 
@@ -24,9 +27,13 @@ def show(request):
     mytype = request.GET.get('mytype', '')
     print(mytype)
     print(search)
-    product_type = Product_type.objects.all()
+    product_type= Product_type.objects.all()
     product = Product.objects.filter(Q(is_hide=False)&(Q(name__icontains=search)))
+<<<<<<< HEAD
     paginator = Paginator(product, 8)
+=======
+    paginator = Paginator(product, 20)
+>>>>>>> e715778da4fc9cd2684fbc75e59deee24d57c857
     page = request.GET.get('page')
     product = paginator.get_page(page)
     return render(request, 'Index/home.html', context=
@@ -34,6 +41,48 @@ def show(request):
         'product':product,
         'product_type':product_type
     })
+
+def Checkout(request):
+    if request.method == 'POST':
+        my_from = CheckoutFrom(request.POST or None)
+        try:
+            order = Order.objects.get(user=request.user, ordered=False)
+            if my_from.is_valid():
+                street_address = my_form.cleaned_data.get('street_address') 
+                apartment_address = my_form.cleaned_data.get('apartment_address')
+                country = my_form.cleaned_data.get('country')
+                zip = my_form.cleaned_data.get('zip')
+                default = my_form.cleaned_data.get('default')
+                payment_option = my_form.cleaned_data.get('payment_option')
+                adddress = Address (
+                    user = request.user,
+                    street_address = street_address
+                    apartment_address = apartment_address
+                    country = country
+                    zip = zip
+                    default = default
+                    payment_option = payment_option
+                )adddress.save()
+                order.delivery_place = adddress
+                order()
+                return redirect("checkout")
+            messages.warning(self.request, "Failed checkout")
+            return redirect("checkout")
+        
+        except ObjectDoesNotExist:
+            messages.warning(self.request, "You do not have an active order")
+            return redirect("order-summary")
+       
+      
+
+    else:
+        my_from = CheckoutFrom()
+        context = {
+            'my_from':my_from
+        }
+    return render(request, 'Index/checkout.html', context)
+    
+    
 
 @login_required
 def OrderSummary(request):
@@ -168,13 +217,15 @@ def signup(request):
         email = request.POST.get('email')         
         password = request.POST.get('password')         
         password2 = request.POST.get('cpassword')
-        age = request.POST.get('age')
-        gender = request.POST.get('gender')
-        dob = request.POST.get('dob')
-
-        if password == password2:        
+        print('-------------------------')
+        print(fname)
+        print(lname)
+        print(username)
+        print(email) 
+        print(password)         
+        print(password2)       
+        if password == password2:
             user = User.objects.create_user(username,  email, password)
-            my_user = My_User.objects.create(age=age, dob=dob, gender=gender, user=user)
             user.fist_name = fname
             user.last_name = lname
             user.save()
