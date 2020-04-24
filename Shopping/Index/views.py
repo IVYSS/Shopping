@@ -41,10 +41,36 @@ def show(request):
 
 def Checkout(request):
     if request.method == 'POST':
-        my_from = CheckoutFrom(self.request.POST or None)
-        if form.is_valid():
-            print("The form is valid")
+        my_from = CheckoutFrom(request.POST or None)
+        try:
+            order = Order.objects.get(user=request.user, ordered=False)
+            if my_from.is_valid():
+                street_address = my_form.cleaned_data.get('street_address') 
+                apartment_address = my_form.cleaned_data.get('apartment_address')
+                country = my_form.cleaned_data.get('country')
+                zip = my_form.cleaned_data.get('zip')
+                default = my_form.cleaned_data.get('default')
+                payment_option = my_form.cleaned_data.get('payment_option')
+                adddress = Address (
+                    user = request.user,
+                    street_address = street_address
+                    apartment_address = apartment_address
+                    country = country
+                    zip = zip
+                    default = default
+                    payment_option = payment_option
+                )adddress.save()
+                order.delivery_place = adddress
+                order()
+                return redirect("checkout")
+            messages.warning(self.request, "Failed checkout")
             return redirect("checkout")
+        
+        except ObjectDoesNotExist:
+            messages.warning(self.request, "You do not have an active order")
+            return redirect("order-summary")
+       
+      
 
     else:
         my_from = CheckoutFrom()

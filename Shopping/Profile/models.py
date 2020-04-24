@@ -1,6 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
-from Index.models import Order_products
+from Index.models import Order_products,Address
 
 
 # Create your models here.
@@ -47,7 +47,7 @@ class Promotion(models.Model):
     
 class Order(models.Model):
     date =  models.DateField(auto_now=False, auto_now_add=True)
-    delivery_place = models.TextField(null=True, blank=True)
+    delivery_place = models.ForeignKey(Address,on_delete=models.SET_NULL,null=True, blank=True)
     ordered = models.BooleanField(default=False)
     products = models.ManyToManyField(Order_products)
     Status = (
