@@ -31,16 +31,17 @@ class Financial_detail(models.Model):
 
    
 class Order(models.Model):
-    date =  models.DateField(auto_now=False, auto_now_add=True)
+    order_date =  models.DateTimeField(null=True, blank=True)
     delivery_place = models.ForeignKey(Address,on_delete=models.SET_NULL,null=True, blank=True)
     payment = models.ForeignKey(
         'Payment', on_delete=models.SET_NULL, blank=True, null=True)
     ordered = models.BooleanField(default=False)
     products = models.ManyToManyField(Order_products)
     Status = (
-        ('NS','Notyetshipped'),
-        ('S','Shipping'),
-        ('D','Delivered'),
+        ('NS','Packaging'),
+        ('D','Delivering'),
+        ('R','Received'),
+        ('Re', 'Refunde')
     )
     status = models.CharField(max_length=2, choices=Status)
     user= models.ForeignKey(User, on_delete=models.CASCADE,null=True, blank=True)

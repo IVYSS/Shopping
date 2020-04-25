@@ -8,6 +8,7 @@ from Profile.models import My_User,Financial_detail,Payment,Order
 class OrderAdmin(admin.ModelAdmin):
     list_display = ['user',
                     'ordered','status']
+    list_per_page = 10
 admin.site.register(Product)
 admin.site.register(Product_type)
 admin.site.register(My_User)

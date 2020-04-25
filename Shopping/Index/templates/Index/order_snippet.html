@@ -17,7 +17,7 @@
               <span class="text-muted">{{order_product.get_final_price}}฿</span>
             </li>
           {% endfor %}
-
+          {% if order.promotion %}
             <li class="list-group-item d-flex justify-content-between bg-light">
               <div class="text-success">
                 <h6 class="my-0">Promo code</h6>
@@ -30,6 +30,7 @@
               <strong>{{order.get_total}}฿</strong>
             </li>
           </ul>
+          {% endif %}
           <!-- Cart -->
 
           <!-- Promo code -->

@@ -182,8 +182,9 @@ def PaymentView(request, payment_option):
                 request, "A serious error occurred. We have been notifed.")
             return redirect("/")       
     else:
+        order = Order.objects.get(user=request.user, ordered=False)
         if order.delivery_place:
-            order = Order.objects.get(user=request.user, ordered=False)
+           
             context = {
                 'order' : order,
                 'DISPLAY_COUPON_FORM': False
@@ -227,8 +228,8 @@ def add_to_cart(request,product_id):
             messages.info(request, "This product was added to your cart.")
         
     else:
-        date = timezone.now()
-        order = Order.objects.create(user=request.user, date=date)
+        order_date = timezone.localtime(timezone.now())
+        order = Order.objects.create(user=request.user, order_date=order_date)
         order.products.add(order_product)
         messages.info(request, "This product was added to your cart.")
        
