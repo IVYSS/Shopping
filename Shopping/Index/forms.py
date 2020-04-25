@@ -1,7 +1,7 @@
 from django import forms
 from django_countries.fields import CountryField
 from django.forms import ModelForm
-from .models import Address
+from .models import Address,Promotion
 from django_countries.widgets import CountrySelectWidget
 
 class CheckoutFrom(ModelForm):
@@ -22,3 +22,17 @@ class CheckoutFrom(ModelForm):
                 'class': 'custom-select d-block w-100'}),
                 
         }
+
+class PromotionFrom(ModelForm):
+    class Meta:
+        model = Promotion
+        fields = ['name']
+        widgets = { 
+            'name' : forms.TextInput(attrs={
+                'class' : 'form-control',
+                'placeholder': 'Promo code',
+                'aria-label': 'Recipient\'s username',
+                'aria-describedby': 'basic-addon2'
+            }
+
+            )}

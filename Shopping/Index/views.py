@@ -1,4 +1,4 @@
-from .models import Product,Product_type,Order_products,Address
+from .models import Product,Product_type,Order_products,Address,Promotion
 from Profile.models import Order,Payment
 from django.shortcuts import redirect, render
 from django.http import HttpResponse, JsonResponse
@@ -13,7 +13,7 @@ from django.shortcuts import render,get_object_or_404
 from django.utils import timezone
 from django.contrib import messages
 from django.core.exceptions import ObjectDoesNotExist
-from Index.forms import CheckoutFrom
+from Index.forms import CheckoutFrom,PromotionFrom
 import json
 from django.views.decorators.csrf import csrf_exempt
 
@@ -30,8 +30,7 @@ stripe.api_key = "sk_test_4eC39HqLyjWDarjtT1zdp7dc"
 
 def show(request):
     search = request.GET.get('search', '')
-    mytype = request.GET.get('mytype', '')
-    print(mytype)
+    
     print(search)
     product_type= Product_type.objects.all()
     product = Product.objects.filter(Q(is_hide=False)&(Q(name__icontains=search)))
@@ -86,11 +85,22 @@ def Checkout(request):
             return redirect("order-summary")
        
     else:
-        my_form = CheckoutFrom()
-        context = {
-            'my_form':my_form
-        }
-    return render(request, 'Index/checkout.html', context)
+        try:
+            order = Order.objects.get(user=request.user, ordered=False)
+            my_form = CheckoutFrom()
+            context = {
+                'my_form':my_form,
+                'order': order,
+                'promotionfrom':PromotionFrom(),
+                'DISPLAY_COUPON_FORM': True
+
+            }
+            return render(request, 'Index/checkout.html', context)
+        except ObjectDoesNotExist:
+            messages.info(request, "You do not have an active order")
+            return redirect("checkout")
+        
+    
     
     
 def PaymentView(request, payment_option):
@@ -115,7 +125,13 @@ def PaymentView(request, payment_option):
             payment.amount = order.get_total()
             payment.save()
 
+            order_products = order.products.all()
+            order_products.update(ordered = True)
+            for product in order_products:
+                product.save()
+
             order.ordered = True
+            order.status = 'NS'
             order.payment = payment
             
             order.save()
@@ -166,10 +182,18 @@ def PaymentView(request, payment_option):
                 request, "A serious error occurred. We have been notifed.")
             return redirect("/")       
     else:
-        order = Order.objects.get(user=request.user, ordered=False)
-        context = {
-            'order' : order
-        }
+        if order.delivery_place:
+            order = Order.objects.get(user=request.user, ordered=False)
+            context = {
+                'order' : order,
+                'DISPLAY_COUPON_FORM': False
+                
+            }
+        else:
+            messages.warning(
+                self.request, "You have not added a delivery place")
+            return redirect("checkout")
+        
         return render(request, 'Index/payment.html' , context)
     return render(request, 'Index/payment.html')
 
@@ -254,6 +278,38 @@ def remove_single_product_from_cart(request,product_id):
     else:
         messages.info(request, "You do not have an active order")
         return redirect("order-summary")
+    
+
+def get_promotion(request,name):
+    try:
+        promotion = Promotion.objects.get(name=name)
+        if promotion.available:
+            return promotion
+        else:
+            messages.info(request, "This coupon does not available")
+            return redirect("checkout")
+    except ObjectDoesNotExist:
+        messages.info(request, "This coupon does not exist")
+        return redirect("checkout")
+
+def add_promotion(request):
+    if request.method == "POST":
+        myform = PromotionFrom(request.POST or None)
+        if myform.is_valid():
+            try:
+                name = myform.cleaned_data.get('name')
+                order = Order.objects.get(user=request.user, ordered=False)
+                
+                order.promotion_id = get_promotion(request,name)
+                order.save()
+                messages.success(request, "Successfully used promotion")
+                return redirect("checkout")
+
+            except ObjectDoesNotExist:
+                messages.info(request, "You do not have an active order")
+                return redirect("checkout")
+    return None
+
     
 
 def detail(request, product_id):
@@ -387,3 +443,4 @@ def comment(request):
         'input' : data['comment']
     }
     return JsonResponse(response, status = 200)
+

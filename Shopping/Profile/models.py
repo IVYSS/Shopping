@@ -1,6 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
-from Index.models import Order_products,Address
+from Index.models import Order_products,Address,Promotion
 
 
 # Create your models here.
@@ -29,12 +29,7 @@ class Financial_detail(models.Model):
     financial_type = models.CharField(max_length=8, choices=Financial_type)
     financial_user_id = models.ForeignKey(User, on_delete=models.CASCADE)
 
-
-class Promotion(models.Model):
-    name = models.CharField(max_length=255)
-    available = models.BooleanField(default=True)
-    discount = models.IntegerField()
-    
+   
 class Order(models.Model):
     date =  models.DateField(auto_now=False, auto_now_add=True)
     delivery_place = models.ForeignKey(Address,on_delete=models.SET_NULL,null=True, blank=True)
@@ -49,6 +44,8 @@ class Order(models.Model):
     )
     status = models.CharField(max_length=2, choices=Status)
     user= models.ForeignKey(User, on_delete=models.CASCADE,null=True, blank=True)
+    promotion_id = models.ForeignKey(Promotion, on_delete=models.SET_NULL, blank=True, null=True)
+    
     def __str__(self):
         return self.user.username
 
@@ -56,7 +53,10 @@ class Order(models.Model):
         total = 0
         for order_products in self.products.all():
             total += order_products.get_final_price()
+        if self.promotion_id:
+            total -= (total*self.promotion_id.discount)/100
         return total
+
 
 
 class Payment(models.Model):
