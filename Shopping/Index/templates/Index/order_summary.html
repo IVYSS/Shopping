@@ -48,6 +48,12 @@
             </td>
         </tr>
          {% endfor %}
+         {% if order.promotion_id %}
+         <tr>
+            <td colspan="4" ><strong>Promotion</strong></td>
+            <td><b>-{{ order.promotion_id.discount }}%</b></td>
+        </tr>
+        {% endif %}
         {% if order.get_total %}
          <tr>
             <td colspan="4" ><strong>Order Total</strong></td>

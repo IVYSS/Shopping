@@ -20,8 +20,11 @@ urlpatterns = [
     path('checkout/',views.Checkout, name='checkout'),    
     path('order-summary',views.OrderSummary, name='order-summary'),
     path('make-product/',views.make_product, name='make_product'),
+    path('payment/<payment_option>/',views.PaymentView, name='payment'),
     path('type/<int:id>/', views.show_type, name='show_type'),
-    path('api/comment/',views.comment, name='comment')
+    path('api/comment/',views.comment, name='comment'),
+    path('add-promotion/',views.add_promotion, name='add-promotion'),
+    
 ]
 
 urlpatterns += staticfiles_urlpatterns()

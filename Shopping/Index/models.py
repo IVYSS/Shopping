@@ -111,3 +111,11 @@ class Address(models.Model):
 
     def __str__(self):
         return self.user.username
+
+class Promotion(models.Model):
+    name = models.CharField(max_length=255)
+    available = models.BooleanField(default=True)
+    discount = models.IntegerField()
+    
+    def __str__(self):
+        return '%s (%s%% )' %(self.name, self.discount)
