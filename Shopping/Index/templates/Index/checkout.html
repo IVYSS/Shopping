@@ -32,7 +32,7 @@
               
               <!--address-->
               <div class="md-form mb-5">
-               {{my_from.street_address}}
+               {{my_form.street_address}}
               <label for="address" class="">Address</label>
                
               </div>
@@ -40,7 +40,7 @@
               <div class="md-form mb-5">
                 
                 <label for="address-2" class="">Address 2 (optional)</label>
-                {{my_from.apartment_address}}
+                {{my_form.apartment_address}}
 
               </div>
 
@@ -51,7 +51,7 @@
                 <div class="col-lg-4 col-md-12 mb-4">
 
                   <label for="country">Country</label>
-                  {{my_from.country}}
+                  {{my_form.country}}
                   <div class="invalid-feedback">
                     Please select a valid country.
                   </div>
@@ -63,7 +63,7 @@
                 <div class="col-lg-4 col-md-6 mb-4">
 
                   <label for="zip">Zip</label>
-                  {{my_from.zip}}
+                  {{my_form.zip}}
                   <div class="invalid-feedback">
                     Zip code required.
                   </div>
@@ -77,14 +77,14 @@
               <hr>
 
               <div class="custom-control custom-checkbox">
-                <input {% if my_from.default.value %} checked {% endif %} type="checkbox" class="custom-control-input" id="same-address" name = "default">
+                <input {% if my_form.default.value %} checked {% endif %} type="checkbox" class="custom-control-input" id="same-address" name = "default">
                 <label class="custom-control-label" for="same-address">Save this information for next time</label>
               </div>
           
 
               <hr>
               <div class="d-block my-3">
-              {% for value, name in my_from.fields.payment_option.choices %}
+              {% for value, name in my_form.fields.payment_option.choices %}
                <div class="custom-control custom-radio">
                   <input id="{{ name }}" name="payment_option" value="{{ value }}" type="radio" class="custom-control-input" required>
                   <label class="custom-control-label" for="{{ name }}">{{ name }}</label>
@@ -104,7 +104,7 @@
         </div>
         <!--Grid column-->
 
-        <!--Grid column-->
+        
         <div class="col-md-4 mb-4">
 
           <!-- Heading -->
@@ -162,7 +162,7 @@
           <!-- Promo code -->
 
         </div>
-        <!--Grid column-->
+        
 
       </div>
       <!--Grid row-->

@@ -29,16 +29,6 @@ class Financial_detail(models.Model):
     financial_type = models.CharField(max_length=8, choices=Financial_type)
     financial_user_id = models.ForeignKey(User, on_delete=models.CASCADE)
 
-class Payment(models.Model):
-    date = models.DateField(auto_now=False, auto_now_add=False)
-    upload = models.ImageField(blank=True, null=True)
-    Method = (
-        ('paypal','paypal'),
-        ('creditcard','creditcard'),
-        ('truewallet','truewallet')
-    )
-    method = models.CharField(max_length=10, choices=Method)
-    financial_user_id = models.ForeignKey(User, on_delete=models.CASCADE)
 
 class Promotion(models.Model):
     name = models.CharField(max_length=255)
@@ -48,6 +38,8 @@ class Promotion(models.Model):
 class Order(models.Model):
     date =  models.DateField(auto_now=False, auto_now_add=True)
     delivery_place = models.ForeignKey(Address,on_delete=models.SET_NULL,null=True, blank=True)
+    payment = models.ForeignKey(
+        'Payment', on_delete=models.SET_NULL, blank=True, null=True)
     ordered = models.BooleanField(default=False)
     products = models.ManyToManyField(Order_products)
     Status = (
@@ -65,4 +57,19 @@ class Order(models.Model):
         for order_products in self.products.all():
             total += order_products.get_final_price()
         return total
- 
+
+
+class Payment(models.Model):
+    Method = (
+        ('S', 'Stripe'),
+        ('P', 'PayPal')
+    )
+    method = models.CharField(max_length=10, choices=Method)
+    stripe_charge_id = models.CharField(max_length=50, blank=True, null=True)
+    user = models.ForeignKey(User,
+                             on_delete=models.SET_NULL, blank=True, null=True)
+    amount = models.FloatField()
+    timestamp = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.user.username

@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.contrib.auth.models import Permission
 from django.utils.safestring import mark_safe
-from Index.models import Product,Product_type,Review,Order_products
+from Index.models import Product,Product_type,Review,Order_products,Address
 from Profile.models import My_User,Financial_detail,Payment,Promotion,Order
 # Register your models here.
 
@@ -13,6 +13,7 @@ admin.site.register(Payment)
 admin.site.register(Promotion)
 admin.site.register(Order)
 admin.site.register(Review)
+admin.site.register(Address)
 
 admin.site.register(Order_products)
 
