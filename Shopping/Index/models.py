@@ -3,7 +3,6 @@ from django.contrib.auth.models import User
 from django.shortcuts import reverse
 from django_countries.fields import CountryField
 
-
 class Product_type (models.Model):
     name = models.CharField(max_length=255)
     

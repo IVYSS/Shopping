@@ -1,7 +1,7 @@
 from .models import Product,Product_type,Order_products,Address
 from Profile.models import Order,Payment
 from django.shortcuts import redirect, render
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.contrib.auth import authenticate, login, logout, update_session_auth_hash
 from django.db.models import Q
 from django.core.paginator import Paginator
@@ -14,7 +14,9 @@ from django.utils import timezone
 from django.contrib import messages
 from django.core.exceptions import ObjectDoesNotExist
 from Index.forms import CheckoutFrom
-from decimal import *
+import json
+from django.views.decorators.csrf import csrf_exempt
+
 from django.contrib.auth.forms import PasswordChangeForm
 from .form import ModelProduct
 
@@ -33,14 +35,17 @@ def show(request):
     print(search)
     product_type= Product_type.objects.all()
     product = Product.objects.filter(Q(is_hide=False)&(Q(name__icontains=search)))
-    paginator = Paginator(product, 2)
+    count_product = product.count()
+    print(count_product)
+    paginator = Paginator(product, 8)
     page = request.GET.get('page')
    
     product = paginator.get_page(page)
     return render(request, 'Index/home.html', context=
     {
         'product':product,
-        'product_type':product_type
+        'product_type':product_type,
+        'count_product' : count_product
     })
 
 def Checkout(request):
@@ -62,7 +67,7 @@ def Checkout(request):
                     country = country,
                     zip = zip,
                     default = default,
-                    payment_option = payment_option,
+                    payment_option = payment_option
                 )
                 adddress.save()
                 order.delivery_place = adddress
@@ -309,7 +314,7 @@ def signup(request):
         print(password)         
         print(password2)       
         if password == password2:             
-                      
+
             user = User.objects.create_user(username,  email, password)
             user.fist_name = fname
             user.last_name = lname
@@ -341,6 +346,7 @@ def change_password(request):
 def make_product(request):
 
     product_type = Product_type.objects.all()
+    
     if request.method == 'POST':
         form = ModelProduct(request.POST, request.FILES)
         if form.is_valid():
@@ -349,6 +355,7 @@ def make_product(request):
             product.product_type_id = Product_type.objects.get(pk=type_id)
             product.sale_user_id = request.user
             form.save()
+            return redirect('show') 
     else:
         form = ModelProduct()
     context = {
@@ -357,3 +364,26 @@ def make_product(request):
     }
 
     return render(request, 'Index/make-product.html', context=context)
+
+def show_type(request, id):
+    id_product = Product_type.objects.get(pk=id) #รับจากที่ กด ใน type-page.html
+    t_product = Product.objects.filter(product_type_id = id_product) #เลือกเฉพาะ หมวด ใน ตาราง Product
+    count_t_product = t_product.count()
+    print(count_t_product)
+    context = {
+        't_product' : t_product
+    }
+    return render(request, 'Index/type-page.html', context)
+
+@csrf_exempt
+# ----------------------comment----------------------
+def comment(request):
+    data = json.loads(request.body)
+    print('----------------------')
+    print(data)
+    print('----------------------')
+
+    response = {
+        'input' : data['comment']
+    }
+    return JsonResponse(response, status = 200)
