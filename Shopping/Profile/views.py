@@ -2,6 +2,8 @@ from django.shortcuts import redirect, render
 from django.http import HttpResponse
 from django.contrib.auth.models import User
 from Profile.models import My_User
+from django.views.decorators.csrf import csrf_exempt
+
 # Create your views here.
 
 def showprofile(request):
@@ -21,3 +23,8 @@ def showprofile(request):
           'information': information
      }
      return render(request, 'Profile/profile.html', context=context)
+
+# Chang information profile
+@csrf_exempt
+def profile_change(request):
+     return None

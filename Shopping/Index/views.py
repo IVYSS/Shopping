@@ -29,9 +29,17 @@ def show(request):
     print(search)
     product_type= Product_type.objects.all()
     product = Product.objects.filter(Q(is_hide=False)&(Q(name__icontains=search)))
+<<<<<<< HEAD
     count_product = product.count()
     print(count_product)
     paginator = Paginator(product, 8)
+=======
+<<<<<<< HEAD
+    paginator = Paginator(product, 8)
+=======
+    paginator = Paginator(product, 20)
+>>>>>>> e715778da4fc9cd2684fbc75e59deee24d57c857
+>>>>>>> parent of 231e4cc... แก้
     page = request.GET.get('page')
    
     product = paginator.get_page(page)
@@ -225,8 +233,7 @@ def signup(request):
         print(email) 
         print(password)         
         print(password2)       
-        if password == password2:             
-
+        if password == password2:
             user = User.objects.create_user(username,  email, password)
             user.fist_name = fname
             user.last_name = lname
